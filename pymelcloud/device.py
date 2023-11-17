@@ -217,13 +217,13 @@ class Device(ABC):
 
         consumption = 0
 
-        for mode in ['Heating', 'Cooling', 'Auto', 'Dry', 'Fan', 'Other']:
-            previous_reports = self._energy_report.get(mode, [0.0])
-            if previous_reports:
-                last_report = previous_reports[-1]
-            else:
-                last_report = 0.0
-            consumption += last_report
+        for mode in ['Heating', 'HotWater', 'Cooling', 'Auto', 'Dry', 'Fan', 'Other']:
+            previous_reports = self._energy_report.get(mode, [])
+
+            for report in reversed(previous_reports):
+                if report != 0.0:
+                    consumption += report
+                    break
 
         return consumption
 
